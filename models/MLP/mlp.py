@@ -71,3 +71,7 @@ class MLP:
             return nn.Sigmoid()
         return nn.Identity()
     
+    def clear_grad_and_cache(self):
+        for grad in self.grads:
+            self.grads[grad].zero_()
+        self.cache = dict()
