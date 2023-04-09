@@ -38,3 +38,22 @@ class MLP:
 
         # put all the cache value you need in self.cache
         self.cache = dict()
+
+    def forward(self, x):
+        f = self.getFunction(self.f_function)
+        g = self.getFunction(self.g_function)
+        y_hat = torch.zeros(x.size()[0], self.parameters['W2'].size()[0])
+        h_cache = torch.zeros(x.size()[0], self.parameters['W1'].size()[0])
+        for i, input in enumerate(x):
+            s1 = torch.matmul(self.parameters['W1'], input) + self.parameters['b1']
+            h = f(s1)
+            s2 = torch.matmul(self.parameters['W2'], h) + self.parameters['b2']
+            o = g(s2)
+            y_hat[i] = o
+            h_cache[i] = h
+
+        self.cache['input'] = x
+        self.cache['h'] = h_cache
+        self.cache['y_hat'] = y_hat
+        return y_hat
+            
