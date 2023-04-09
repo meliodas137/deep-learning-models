@@ -1,0 +1,2 @@
+### Multi-Layer Perceptron
+This is an implementaion of Multi-layer perceptron using basic functions of torch and python. Forward and backward propogations have been implemented using basic python functionality. Gradients are caluculated manually for some activation functions. Using the updates of weights in a loop will fully implement the learning of model wherever used. This is a proof-of-concept work. 
