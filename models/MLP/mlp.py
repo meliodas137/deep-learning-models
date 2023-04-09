@@ -121,3 +121,23 @@ def mse_loss(y, y_hat):
         loss += l.sum()
     loss = loss/y_hat.size()[0]
     return loss, dJdy_hat/(y_hat.size()[0]*y_hat.size()[1])
+
+def bce_loss(y, y_hat):
+    """
+    Args:
+        y_hat: the prediction tensor
+        y: the label tensor
+        
+    Return:
+        loss: scalar of loss
+        dJdy_hat: The gradient tensor of shape (batch_size, linear_2_out_features)
+    """
+    dJdy_hat = torch.zeros(y_hat.size()[0], y_hat.size()[1])
+    loss = 0
+    for idx, y_tilde in enumerate(y_hat):
+        dJdy_hat[idx] = (y_tilde - y[idx])/(y_tilde*(1-y_tilde))
+        l = y[idx]*(np.log(y_tilde)) + (1 - y[idx])*(np.log(1 - y_tilde))
+        loss += l.sum()/y_hat.size()[1]
+
+    loss = (-1*loss)/y_hat.size()[0]
+    return loss, dJdy_hat/(y_hat.size()[0]*y_hat.size()[1])
