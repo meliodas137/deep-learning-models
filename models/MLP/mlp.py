@@ -57,6 +57,33 @@ class MLP:
         self.cache['y_hat'] = y_hat
         return y_hat
             
+
+    
+    def backward(self, dJdy_hat):
+        for idx, error in enumerate(dJdy_hat):
+            self.back_prop(error, idx, "second")
+            self.back_prop(error, idx, "first")
+        return
+
+
+    def back_prop(self, error, idx, layer):
+        # pass
+        if layer == "second":
+            derivative = self.getDerivative(self.g_function, self.cache['y_hat'][idx])
+            a = torch.reshape(self.cache['h'][idx], (self.cache['h'][idx].size()[0], 1))
+            b = torch.reshape(error * derivative, (1, derivative.size()[0]))
+            self.cache['b'] = error * derivative
+            self.grads['dJdb2'] += error * derivative
+            self.grads['dJdW2'] += torch.transpose(torch.matmul(a, b), 0, -1)
+
+        elif layer == "first":
+            derivative = self.getDerivative(self.f_function, self.cache['h'][idx])
+            a = torch.reshape(self.cache['input'][idx], (self.cache['input'][idx].size()[0], 1))
+            temp = torch.matmul(self.cache['b'], self.parameters['W2'])
+            self.grads['dJdb1'] += temp * derivative
+            b = torch.reshape( temp * derivative, (1, derivative.size()[0]))
+            self.grads['dJdW1'] += torch.transpose(torch.matmul(a, b), 0, -1)
+
     def getDerivative(self, function, x):
         if function == "relu":
             return (x > 0)*1
