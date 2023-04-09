@@ -102,3 +102,22 @@ class MLP:
         for grad in self.grads:
             self.grads[grad].zero_()
         self.cache = dict()
+
+def mse_loss(y, y_hat):
+    """
+    Args:
+        y: the label tensor (batch_size, linear_2_out_features)
+        y_hat: the prediction tensor (batch_size, linear_2_out_features)
+
+    Return:
+        J: scalar of loss
+        dJdy_hat: The gradient tensor of shape (batch_size, linear_2_out_features)
+    """
+    dJdy_hat = torch.zeros(y_hat.size()[0], y_hat.size()[1])
+    loss = 0
+    for idx, y_tilde in enumerate(y_hat):
+        dJdy_hat[idx] = 2*(y_tilde- y[idx])
+        l = ((y[idx] - y_tilde)**2)/y_hat.size()[1]
+        loss += l.sum()
+    loss = loss/y_hat.size()[0]
+    return loss, dJdy_hat/(y_hat.size()[0]*y_hat.size()[1])
