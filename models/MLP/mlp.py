@@ -57,3 +57,17 @@ class MLP:
         self.cache['y_hat'] = y_hat
         return y_hat
             
+    def getDerivative(self, function, x):
+        if function == "relu":
+            return (x > 0)*1
+        elif function == "sigmoid":
+            return x*(1-x)
+        return torch.ones(x.size()[0])
+
+    def getFunction(self, function):
+        if function == "relu":
+            return nn.ReLU()
+        elif function == "sigmoid":
+            return nn.Sigmoid()
+        return nn.Identity()
+    
